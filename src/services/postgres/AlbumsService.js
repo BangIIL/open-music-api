@@ -32,7 +32,14 @@ class AlbumsService {
     if (!result.rows.length) {
       throw new NotFoundError('Album tidak ditemukan');
     }
-    return result.rows[0];
+    const album = result.rows[0];
+
+    return {
+      id: album.id,
+      name: album.name,
+      year: album.year,
+      coverUrl: album.cover,
+    };
   }
 
   async getSongsByAlbumId(id) {
