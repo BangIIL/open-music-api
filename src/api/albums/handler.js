@@ -64,6 +64,48 @@ class AlbumHandler {
     });
     return response;
   }
+
+  async postAlbumLikesHanlder(request, h) {
+    const { id: credentialId } = request.auth.credentials;
+    const { id: albumId } = request.params;
+
+    await this._service.verifyAlbumLikes(albumId, credentialId);
+    await this._service.addAlbumLikes(albumId, credentialId);
+
+    const response = h.response({
+      status: 'success',
+      message: 'Anda Meyukai album ini',
+    });
+    response.code(201);
+    return response;
+  }
+
+  async getAlbumLikesHanlder(request, h) {
+    const { id } = request.params;
+    const { likes, dataSource } = await this._service.getAlbumLikes(id);
+
+    const response = h.response({
+      status: 'success',
+      data: {
+        likes: parseInt(likes, 10),
+      },
+    });
+    response.header('X-Data-Source', dataSource);
+    return response;
+  }
+
+  async deleteAlbumLikesHanlder(request, h) {
+    const { id: credentialId } = request.auth.credentials;
+    const { id: albumId } = request.params;
+
+    await this._service.deleteAlbumLikes(albumId, credentialId);
+
+    const response = h.response({
+      status: 'success',
+      message: 'Batal menyukai album',
+    });
+    return response;
+  }
 }
 
 module.exports = AlbumHandler;
